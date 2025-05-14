@@ -5,12 +5,12 @@
          https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId><%= groupID %></groupId>
-    <artifactId><%= appName %></artifactId>
-    <version><%= globalSnapShot %></version>
+    <groupId>es.example</groupId>
+    <artifactId>myapp</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name><%= appName %></name>
+    <name>myapp</name>
 
     <modules>
         <module>domain</module>
