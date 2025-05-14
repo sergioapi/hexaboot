@@ -1,4 +1,4 @@
-# generator-hexagonal-test [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-hexagonal-test
 > Prueba de generador para proyectos en arquitectura hexagonal
 
 ## Installation
