@@ -23,16 +23,48 @@ module.exports = class extends Generator {
         default: "0.0.1-SNAPSHOT"
       },
       {
-        type: "string",
-        name: "entityName",
-        message: "What is the name of the main entity?",
-        default: "User"
+        type: "input",
+        name: "definitionFile",
+        message: "Enter the path to the entity definition file:",
+        default: "./entities.json"
       }
     ]);
   }
 
   writing() {
-    const { appName, groupID, globalSnapShot, entityName } = this.answers;
+    const { appName, groupID, globalSnapShot, definitionFile } = this.answers;
+    const fs = require("fs");
+    const path = require("path");
+
+    const definitionFilePath = this.answers.definitionFile;
+    const definitionContent = fs.readFileSync(
+      path.resolve(definitionFilePath),
+      "utf-8"
+    );
+    const { entities } = JSON.parse(definitionContent);
+    
+    entities.forEach(entity => {
+      const entityName = entity.name;
+      const entityVarName =
+        entityName.charAt(0).toLowerCase() + entityName.slice(1);
+      const entityFolderName = entityName.toLowerCase();
+      const fields = entity.fields;
+
+      // Usar `fields` para renderizar las plantillas dinámicamente
+      this.fs.copyTpl(
+        this.templatePath("domain/Model.java.tpl"),
+        this.destinationPath(
+          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}s/models/${entityName}.java`
+        ),
+        {
+          model: entityName,
+          groupID: `${groupID}.${entityFolderName}s.models`,
+          fields: fields // pasarlo a la plantilla
+        }
+      );
+
+      // ...y así sucesivamente para el resto de las plantillas
+    });
 
     // Convertimos "User" en "user" para nombres de variables
     const entityVarName =
@@ -40,34 +72,30 @@ module.exports = class extends Generator {
 
     // Convertimos "es.hexagonal" en "es/hexagonal"
     const packagePath = groupID.replace(/\./g, "/");
-    const baseDirectoryDest = 'src/main/java/' + packagePath
+    const baseDirectoryDest = "src/main/java/" + packagePath;
 
     const entityFolderName = entityName.toLowerCase();
 
     //copy project pom.xml
     this.fs.copyTpl(
       this.templatePath("pom.xml.tpl"),
-      this.destinationPath(
-        `${appName}/pom.xml`
-      ),
+      this.destinationPath(`${appName}/pom.xml`),
       {
         appName,
         groupID,
-        globalSnapShot,
+        globalSnapShot
       }
     );
     // Application layer
     this.fs.copyTpl(
-    this.templatePath("application/pom.xml.tpl"),
-    this.destinationPath(
-      `${appName}/application/pom.xml`
-    ),
-    {
-      appName,
-      groupID,
-      globalSnapShot,
-    }
-  );
+      this.templatePath("application/pom.xml.tpl"),
+      this.destinationPath(`${appName}/application/pom.xml`),
+      {
+        appName,
+        groupID,
+        globalSnapShot
+      }
+    );
     this.fs.copyTpl(
       this.templatePath("application/UseCase.java.tpl"),
       this.destinationPath(
@@ -98,13 +126,11 @@ module.exports = class extends Generator {
     //Domain layer
     this.fs.copyTpl(
       this.templatePath("domain/pom.xml.tpl"),
-      this.destinationPath(
-        `${appName}/domain/pom.xml`
-      ),
+      this.destinationPath(`${appName}/domain/pom.xml`),
       {
         appName,
         groupID,
-        globalSnapShot,
+        globalSnapShot
       }
     );
     this.fs.copyTpl(
@@ -134,13 +160,11 @@ module.exports = class extends Generator {
     //Infrastructure
     this.fs.copyTpl(
       this.templatePath("infrastructure/pom.xml.tpl"),
-      this.destinationPath(
-        `${appName}/infrastructure/pom.xml`
-      ),
+      this.destinationPath(`${appName}/infrastructure/pom.xml`),
       {
         appName,
         groupID,
-        globalSnapShot,
+        globalSnapShot
       }
     );
     this.fs.copyTpl(
@@ -153,7 +177,7 @@ module.exports = class extends Generator {
         entityName: `${entityName}`,
         entityVarName: `${entityVarName}`,
         pathModel: `${groupID}.${entityFolderName}s.models`,
-        pathUseCase: `${groupID}.${entityFolderName}s.ports.driving`,
+        pathUseCase: `${groupID}.${entityFolderName}s.ports.driving`
       }
     );
     this.fs.copyTpl(

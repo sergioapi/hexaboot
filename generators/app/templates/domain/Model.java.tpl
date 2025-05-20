@@ -13,8 +13,9 @@ import lombok.Setter;
 @Setter
 public class <%=model%> {
 
-    private Long id;
-    private String text;
+    <% fields.forEach(field => { -%>
+        private <%= field.type %> <%= field.name %>;
+    <% }) -%>
 
 
 }
