@@ -16,6 +16,7 @@
         <module>domain</module>
         <module>application</module>
         <module>infrastructure</module>
+        <module>shared-kernel</module>
     </modules>
 
     <properties>

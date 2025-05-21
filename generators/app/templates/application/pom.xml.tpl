@@ -20,5 +20,10 @@
             <artifactId>domain</artifactId>
             <version><%= globalSnapShot %></version>
         </dependency>
+        <dependency>
+            <groupId><%= groupID %></groupId>
+            <artifactId>application-inbound</artifactId>
+            <version><%= globalSnapShot %></version>
+        </dependency>
     </dependencies>
 </project>

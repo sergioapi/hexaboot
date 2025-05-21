@@ -3,13 +3,13 @@ package <%= groupID %>;
 import <%= pathMapper %>.<%= entityName %>Mapper;
 import <%= pathModel %>.<%= entityName %>;
 import <%= pathRepo %>.<%= entityName %>Repository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class <%= entityName %>RepositoryAdapter implements <%= entityName %>Repository {
 
     private final <%= entityName %>JpaRepository <%= entityVarName %>JpaRepository;

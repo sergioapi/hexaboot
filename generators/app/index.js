@@ -1,5 +1,7 @@
 "use strict";
 const Generator = require("yeoman-generator");
+const fs = require("fs");
+const path = require("path");
 
 module.exports = class extends Generator {
   async prompting() {
@@ -33,50 +35,16 @@ module.exports = class extends Generator {
 
   writing() {
     const { appName, groupID, globalSnapShot, definitionFile } = this.answers;
-    const fs = require("fs");
-    const path = require("path");
 
-    const definitionFilePath = this.answers.definitionFile;
-    const definitionContent = fs.readFileSync(
-      path.resolve(definitionFilePath),
-      "utf-8"
-    );
+    const definitionFilePath = path.resolve(definitionFile);
+    const definitionContent = fs.readFileSync(definitionFilePath, "utf-8");
     const { entities } = JSON.parse(definitionContent);
-    
-    entities.forEach(entity => {
-      const entityName = entity.name;
-      const entityVarName =
-        entityName.charAt(0).toLowerCase() + entityName.slice(1);
-      const entityFolderName = entityName.toLowerCase();
-      const fields = entity.fields;
-
-      // Usar `fields` para renderizar las plantillas dinámicamente
-      this.fs.copyTpl(
-        this.templatePath("domain/Model.java.tpl"),
-        this.destinationPath(
-          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}s/models/${entityName}.java`
-        ),
-        {
-          model: entityName,
-          groupID: `${groupID}.${entityFolderName}s.models`,
-          fields: fields // pasarlo a la plantilla
-        }
-      );
-
-      // ...y así sucesivamente para el resto de las plantillas
-    });
-
-    // Convertimos "User" en "user" para nombres de variables
-    const entityVarName =
-      entityName.charAt(0).toLowerCase() + entityName.slice(1);
 
     // Convertimos "es.hexagonal" en "es/hexagonal"
     const packagePath = groupID.replace(/\./g, "/");
     const baseDirectoryDest = "src/main/java/" + packagePath;
 
-    const entityFolderName = entityName.toLowerCase();
-
-    //copy project pom.xml
+    // Archivos comunes
     this.fs.copyTpl(
       this.templatePath("pom.xml.tpl"),
       this.destinationPath(`${appName}/pom.xml`),
@@ -86,7 +54,7 @@ module.exports = class extends Generator {
         globalSnapShot
       }
     );
-    // Application layer
+    // Application layer pom
     this.fs.copyTpl(
       this.templatePath("application/pom.xml.tpl"),
       this.destinationPath(`${appName}/application/pom.xml`),
@@ -96,34 +64,7 @@ module.exports = class extends Generator {
         globalSnapShot
       }
     );
-    this.fs.copyTpl(
-      this.templatePath("application/UseCase.java.tpl"),
-      this.destinationPath(
-        `${appName}/application/${baseDirectoryDest}/${entityFolderName}s/ports/driving/${entityName}UseCase.java`
-      ),
-      {
-        model: `${entityName}`,
-        entityVarName: `${entityVarName}`,
-        groupID: `${groupID}.${entityFolderName}s.ports.driving`,
-        pathModel: `${groupID}.${entityFolderName}s.models`
-      }
-    );
-    this.fs.copyTpl(
-      this.templatePath("application/UseCaseImpl.java.tpl"),
-      this.destinationPath(
-        `${appName}/application/${baseDirectoryDest}/${entityFolderName}s/usecases/${entityName}UseCaseImpl.java`
-      ),
-      {
-        model: `${entityName}`,
-        entityVarName: `${entityVarName}`,
-        groupID: `${groupID}.${entityFolderName}s.usecases`,
-        pathModel: `${groupID}.${entityFolderName}s.models`,
-        pathUseCase: `${groupID}.${entityFolderName}s.ports.driving`,
-        pathRepository: `${groupID}.${entityFolderName}s.ports.driven`
-      }
-    );
-
-    //Domain layer
+    //Domain layer pom
     this.fs.copyTpl(
       this.templatePath("domain/pom.xml.tpl"),
       this.destinationPath(`${appName}/domain/pom.xml`),
@@ -133,31 +74,7 @@ module.exports = class extends Generator {
         globalSnapShot
       }
     );
-    this.fs.copyTpl(
-      this.templatePath("domain/Model.java.tpl"),
-      this.destinationPath(
-        `${appName}/domain/${baseDirectoryDest}/${entityFolderName}s/models/${entityName}.java`
-      ),
-      {
-        model: `${entityName}`,
-        groupID: `${groupID}.${entityFolderName}s.models`
-      }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath("domain/Repository.java.tpl"),
-      this.destinationPath(
-        `${appName}/domain/${baseDirectoryDest}/${entityFolderName}s/ports/driven/${entityName}Repository.java`
-      ),
-      {
-        model: `${entityName}`,
-        entityVarName: `${entityVarName}`,
-        groupID: `${groupID}.${entityFolderName}s.ports.driven`,
-        pathModel: `${groupID}.${entityFolderName}s.models`
-      }
-    );
-
-    //Infrastructure
+    //Infrastructure layer pom
     this.fs.copyTpl(
       this.templatePath("infrastructure/pom.xml.tpl"),
       this.destinationPath(`${appName}/infrastructure/pom.xml`),
@@ -167,81 +84,34 @@ module.exports = class extends Generator {
         globalSnapShot
       }
     );
+    //Shared kernel pom
     this.fs.copyTpl(
-      this.templatePath("infrastructure/adapters/Controller.java.tpl"),
-      this.destinationPath(
-        `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}s/adapters/rest/${entityName}Controller.java`
-      ),
+      this.templatePath("shared-kernel/pom.xml.tpl"),
+      this.destinationPath(`${appName}/shared-kernel/pom.xml`),
       {
-        groupID: `${groupID}.${entityFolderName}s.adapters.rest`,
-        entityName: `${entityName}`,
-        entityVarName: `${entityVarName}`,
-        pathModel: `${groupID}.${entityFolderName}s.models`,
-        pathUseCase: `${groupID}.${entityFolderName}s.ports.driving`
+        appName,
+        groupID,
+        globalSnapShot
       }
     );
     this.fs.copyTpl(
-      this.templatePath("infrastructure/adapters/Entity.java.tpl"),
-      this.destinationPath(
-        `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}s/adapters/persistence/entities/${entityName}Entity.java`
-      ),
+      this.templatePath("shared-kernel/application-inbound/pom.xml.tpl"),
+      this.destinationPath(`${appName}/shared-kernel/application-inbound/pom.xml`),
       {
-        groupID: `${groupID}.${entityFolderName}s.adapters.persistence.entities`,
-        model: `${entityName}`
+        groupID,
+        globalSnapShot
       }
     );
     this.fs.copyTpl(
-      this.templatePath("infrastructure/adapters/Mapper.java.tpl"),
+      this.templatePath("shared-kernel/application-inbound/UseCase.java.tpl"),
       this.destinationPath(
-        `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}s/adapters/persistence/mappers/${entityName}Mapper.java`
+        `${appName}/shared-kernel/application-inbound/${baseDirectoryDest}/annotations/UseCase.java`
       ),
       {
-        groupID: `${groupID}.${entityFolderName}s.adapters.persistence.mappers`,
-        entityName: `${entityName}`,
-        entityVarName: `${entityVarName}`,
-        pathModel: `${groupID}.${entityFolderName}s.models`,
-        pathEntity: `${groupID}.${entityFolderName}s.adapters.persistence.entities`
+        groupID: `${groupID}.annotations`
       }
     );
-    this.fs.copyTpl(
-      this.templatePath("infrastructure/adapters/Repository.java.tpl"),
-      this.destinationPath(
-        `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}s/adapters/persistence/repositories/${entityName}JpaRepository.java`
-      ),
-      {
-        groupID: `${groupID}.${entityFolderName}s.adapters.persistence.repositories`,
-        entityName: `${entityName}`,
-        pathEntity: `${groupID}.${entityFolderName}s.adapters.persistence.entities`
-      }
-    );
-    this.fs.copyTpl(
-      this.templatePath("infrastructure/adapters/RepositoryAdapter.java.tpl"),
-      this.destinationPath(
-        `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}s/adapters/persistence/repositories/${entityName}RepositoryAdapter.java`
-      ),
-      {
-        groupID: `${groupID}.${entityFolderName}s.adapters.persistence.repositories`,
-        entityName: `${entityName}`,
-        entityVarName: `${entityVarName}`,
-        pathModel: `${groupID}.${entityFolderName}s.models`,
-        pathRepo: `${groupID}.${entityFolderName}s.ports.driven`,
-        pathMapper: `${groupID}.${entityFolderName}s.adapters.persistence.mappers`
-      }
-    );
-    this.fs.copyTpl(
-      this.templatePath("infrastructure/Config.java.tpl"),
-      this.destinationPath(
-        `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}s/config/${entityName}Config.java`
-      ),
-      {
-        entityName: `${entityName}`,
-        entityVarName: `${entityVarName}`,
-        groupID: `${groupID}.${entityFolderName}s.config`,
-        useCaseImplPath: `${groupID}.${entityFolderName}s.usecases`,
-        useCasePath: `${groupID}.${entityFolderName}s.ports.driving`,
-        entityRepoPath: `${groupID}.${entityFolderName}s.ports.driven`
-      }
-    );
+
     this.fs.copyTpl(
       this.templatePath("infrastructure/Application.java.tpl"),
       this.destinationPath(
@@ -249,7 +119,8 @@ module.exports = class extends Generator {
       ),
       {
         groupID: `${groupID}`,
-        mainClassName: `${appName}App`
+        mainClassName: `${appName}App`,
+        pathUseCaseAnnotation: `${groupID}.annotations`
       }
     );
     this.fs.copyTpl(
@@ -259,6 +130,153 @@ module.exports = class extends Generator {
       ),
       {}
     );
+
+    entities.forEach(entity => {
+      const entityName = entity.name;
+      const entityVarName =
+        entityName.charAt(0).toLowerCase() + entityName.slice(1);
+      const entityFolderName = entityName.toLowerCase() + "s";
+      const fields = entity.fields;
+
+      // Application Layer
+      this.fs.copyTpl(
+        this.templatePath("application/UseCase.java.tpl"),
+        this.destinationPath(
+          `${appName}/application/${baseDirectoryDest}/${entityFolderName}/ports/driving/${entityName}UseCase.java`
+        ),
+        {
+          model: entityName,
+          entityVarName,
+          groupID: `${groupID}.${entityFolderName}.ports.driving`,
+          pathModel: `${groupID}.${entityFolderName}.models`
+        }
+      );
+
+      this.fs.copyTpl(
+        this.templatePath("application/UseCaseImpl.java.tpl"),
+        this.destinationPath(
+          `${appName}/application/${baseDirectoryDest}/${entityFolderName}/usecases/${entityName}UseCaseImpl.java`
+        ),
+        {
+          model: entityName,
+          entityVarName,
+          groupID: `${groupID}.${entityFolderName}.usecases`,
+          pathModel: `${groupID}.${entityFolderName}.models`,
+          pathUseCase: `${groupID}.${entityFolderName}.ports.driving`,
+          pathRepository: `${groupID}.${entityFolderName}.ports.driven`,
+          pathUseCaseAnnotation: `${groupID}.annotations`
+        }
+      );
+
+      // Domain Layer
+      this.fs.copyTpl(
+        this.templatePath("domain/Model.java.tpl"),
+        this.destinationPath(
+          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}/models/${entityName}.java`
+        ),
+        {
+          model: entityName,
+          groupID: `${groupID}.${entityFolderName}.models`,
+          fields
+        }
+      );
+
+      this.fs.copyTpl(
+        this.templatePath("domain/Repository.java.tpl"),
+        this.destinationPath(
+          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}/ports/driven/${entityName}Repository.java`
+        ),
+        {
+          model: entityName,
+          entityVarName,
+          groupID: `${groupID}.${entityFolderName}.ports.driven`,
+          pathModel: `${groupID}.${entityFolderName}.models`
+        }
+      );
+
+      // Infrastructure Layer
+      this.fs.copyTpl(
+        this.templatePath("infrastructure/adapters/Controller.java.tpl"),
+        this.destinationPath(
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/rest/${entityName}Controller.java`
+        ),
+        {
+          groupID: `${groupID}.${entityFolderName}.adapters.rest`,
+          entityName,
+          entityVarName,
+          pathModel: `${groupID}.${entityFolderName}.models`,
+          pathUseCase: `${groupID}.${entityFolderName}.ports.driving`
+        }
+      );
+
+      this.fs.copyTpl(
+        this.templatePath("infrastructure/adapters/Entity.java.tpl"),
+        this.destinationPath(
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/entities/${entityName}Entity.java`
+        ),
+        {
+          groupID: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
+          model: entityName,
+          fields
+        }
+      );
+
+      this.fs.copyTpl(
+        this.templatePath("infrastructure/adapters/Mapper.java.tpl"),
+        this.destinationPath(
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/mappers/${entityName}Mapper.java`
+        ),
+        {
+          groupID: `${groupID}.${entityFolderName}.adapters.persistence.mappers`,
+          entityName,
+          entityVarName,
+          pathModel: `${groupID}.${entityFolderName}.models`,
+          pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`
+        }
+      );
+
+      this.fs.copyTpl(
+        this.templatePath("infrastructure/adapters/Repository.java.tpl"),
+        this.destinationPath(
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/repositories/${entityName}JpaRepository.java`
+        ),
+        {
+          groupID: `${groupID}.${entityFolderName}.adapters.persistence.repositories`,
+          entityName,
+          pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`
+        }
+      );
+
+      this.fs.copyTpl(
+        this.templatePath("infrastructure/adapters/RepositoryAdapter.java.tpl"),
+        this.destinationPath(
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/repositories/${entityName}RepositoryAdapter.java`
+        ),
+        {
+          groupID: `${groupID}.${entityFolderName}.adapters.persistence.repositories`,
+          entityName,
+          entityVarName,
+          pathModel: `${groupID}.${entityFolderName}.models`,
+          pathRepo: `${groupID}.${entityFolderName}.ports.driven`,
+          pathMapper: `${groupID}.${entityFolderName}.adapters.persistence.mappers`
+        }
+      );
+/*
+      this.fs.copyTpl(
+        this.templatePath("infrastructure/Config.java.tpl"),
+        this.destinationPath(
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/config/${entityName}Config.java`
+        ),
+        {
+          entityName,
+          entityVarName,
+          groupID: `${groupID}.${entityFolderName}.config`,
+          useCaseImplPath: `${groupID}.${entityFolderName}.usecases`,
+          useCasePath: `${groupID}.${entityFolderName}.ports.driving`,
+          entityRepoPath: `${groupID}.${entityFolderName}.ports.driven`
+        }
+      );*/
+    });
   }
 
   install() {

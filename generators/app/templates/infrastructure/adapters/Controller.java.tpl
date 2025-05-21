@@ -2,7 +2,7 @@ package <%= groupID %>;
 
 import <%=pathModel%>.<%=entityName%>;
 import <%=pathUseCase%>.<%=entityName%>UseCase;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/<%=entityVarName%>s")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class <%=entityName%>Controller {
 
     private final <%=entityName%>UseCase <%=entityVarName%>UseCase;

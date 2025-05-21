@@ -3,10 +3,12 @@ package <%= groupID %>;
 import <%=pathModel%>.<%=model%>;
 import <%=pathRepository%>.<%=model%>Repository;
 import <%=pathUseCase%>.<%=model%>UseCase;
+import <%=pathUseCaseAnnotation%>.UseCase;
 
 import java.util.Optional;
 import java.util.List;
 
+@UseCase
 public class <%= model %>UseCaseImpl implements <%= model %>UseCase {
     private final <%= model %>Repository <%= entityVarName%>Repository;
 

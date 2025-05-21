@@ -1,0 +1,20 @@
+{
+  "entities": [
+    {
+      "name": "User",
+      "fields": [
+        {"name": "id", "type": "Long"},
+        {"name": "username", "type": "String"},
+        {"name": "email", "type": "String"}
+      ]
+    },
+    {
+      "name": "Product",
+      "fields": [
+        {"name": "id", "type": "Long"},
+        {"name": "name", "type": "String"},
+        {"name": "price", "type": "Double"}
+      ]
+    }
+  ]
+}
