@@ -1,19 +1,33 @@
 {
   "entities": [
     {
-      "name": "User",
+      "name": "Factura",
       "fields": [
-        {"name": "id", "type": "Long"},
-        {"name": "username", "type": "String"},
-        {"name": "email", "type": "String"}
+        { "name": "id", "type": "Long" },
+        { "name": "numero", "type": "String" }
+      ],
+      "relations": [
+        {
+          "type": "OneToMany",
+          "targetEntity": "LineaFactura",
+          "fieldName": "lineas",
+          "mappedBy": "factura"
+        }
       ]
     },
     {
-      "name": "Product",
+      "name": "LineaFactura",
       "fields": [
-        {"name": "id", "type": "Long"},
-        {"name": "name", "type": "String"},
-        {"name": "price", "type": "Double"}
+        { "name": "id", "type": "Long" },
+        { "name": "descripcion", "type": "String" },
+        { "name": "cantidad", "type": "int" }
+      ],
+      "relations": [
+        {
+          "type": "ManyToOne",
+          "targetEntity": "Factura",
+          "fieldName": "factura"
+        }
       ]
     }
   ]

@@ -38,7 +38,7 @@ module.exports = class extends Generator {
 
     const definitionFilePath = path.resolve(definitionFile);
     const definitionContent = fs.readFileSync(definitionFilePath, "utf-8");
-    const { entities } = JSON.parse(definitionContent);
+    const { entities = [], enums = [] } = JSON.parse(definitionContent);
 
     // Convertimos "es.hexagonal" en "es/hexagonal"
     const packagePath = groupID.replace(/\./g, "/");
@@ -96,7 +96,9 @@ module.exports = class extends Generator {
     );
     this.fs.copyTpl(
       this.templatePath("shared-kernel/application-inbound/pom.xml.tpl"),
-      this.destinationPath(`${appName}/shared-kernel/application-inbound/pom.xml`),
+      this.destinationPath(
+        `${appName}/shared-kernel/application-inbound/pom.xml`
+      ),
       {
         groupID,
         globalSnapShot
@@ -137,6 +139,17 @@ module.exports = class extends Generator {
         entityName.charAt(0).toLowerCase() + entityName.slice(1);
       const entityFolderName = entityName.toLowerCase() + "s";
       const fields = entity.fields;
+      const relations = entity.relations || [];
+
+      const relationImports = (entity.relations || []).map(rel => {
+        const targetEntity = rel.targetEntity;
+        const targetFolderName = targetEntity.toLowerCase() + "s";
+        return `${groupID}.${targetFolderName}.adapters.persistence.entities.${targetEntity}Entity`;
+      });
+
+      const needsListImport = relations.some(
+        rel => rel.type === "OneToMany" || rel.type === "ManyToMany"
+      );
 
       // Application Layer
       this.fs.copyTpl(
@@ -217,7 +230,10 @@ module.exports = class extends Generator {
         {
           groupID: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
           model: entityName,
-          fields
+          fields,
+          relations,
+          relationImports,
+          needsListImport
         }
       );
 
@@ -261,7 +277,7 @@ module.exports = class extends Generator {
           pathMapper: `${groupID}.${entityFolderName}.adapters.persistence.mappers`
         }
       );
-/*
+      /*
       this.fs.copyTpl(
         this.templatePath("infrastructure/Config.java.tpl"),
         this.destinationPath(
@@ -276,6 +292,23 @@ module.exports = class extends Generator {
           entityRepoPath: `${groupID}.${entityFolderName}.ports.driven`
         }
       );*/
+    });
+
+    enums.forEach(enumDef => {
+      const enumName = enumDef.name;
+      const values = enumDef.values;
+
+      this.fs.copyTpl(
+        this.templatePath("domain/Enum.java.tpl"),
+        this.destinationPath(
+          `${appName}/domain/${baseDirectoryDest}/enums/${enumName}.java`
+        ),
+        {
+          enumName,
+          values,
+          groupID: `${groupID}.enums`
+        }
+      );
     });
   }
 
