@@ -24,16 +24,16 @@ public class <%=entityName%>Controller {
         return ResponseEntity.ok(<%=entityVarName%>UseCase.create<%=entityName%>(<%=entityVarName%>));
     }
 
-    @PutMapping("{<%=entityVarName%>Id}")
-    public ResponseEntity<<%=entityName%>> update<%=entityName%>(@PathVariable Long <%=entityVarName%>Id, @RequestBody <%=entityName%> update<%=entityName%>) {
-        return Optional.ofNullable(<%=entityVarName%>UseCase.update<%=entityName%>(<%=entityVarName%>Id, update<%=entityName%>))
+    @PutMapping("/{id}")
+    public ResponseEntity<<%=entityName%>> update<%=entityName%>(@PathVariable Long id, @RequestBody <%=entityName%> update<%=entityName%>) {
+        return Optional.ofNullable(<%=entityVarName%>UseCase.update<%=entityName%>(id, update<%=entityName%>))
                 .map(<%=entityVarName%> -> new ResponseEntity<>(<%=entityVarName%>, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("{<%=entityVarName%>Id}")
-    public ResponseEntity<Void> delete<%=entityName%>(@PathVariable Long <%=entityVarName%>Id) {
-        if (!<%=entityVarName%>UseCase.delete<%=entityName%>(<%=entityVarName%>Id)) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete<%=entityName%>(@PathVariable Long id) {
+        if (!<%=entityVarName%>UseCase.delete<%=entityName%>(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -44,9 +44,9 @@ public class <%=entityName%>Controller {
         return ResponseEntity.ok(<%=entityVarName%>UseCase.getAll<%=entityName%>s());
     }
 
-    @GetMapping("{<%=entityVarName%>Id}")
-    public ResponseEntity<<%=entityName%>> get<%=entityName%>ById(@PathVariable Long <%=entityVarName%>Id) {
-        return Optional.ofNullable(<%=entityVarName%>UseCase.get<%=entityName%>(<%=entityVarName%>Id))
+    @GetMapping("/{id}")
+    public ResponseEntity<<%=entityName%>> get<%=entityName%>ById(@PathVariable Long id) {
+        return Optional.ofNullable(<%=entityVarName%>UseCase.get<%=entityName%>(id))
                 .map(<%=entityVarName%> -> new ResponseEntity<>(<%=entityVarName%>, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

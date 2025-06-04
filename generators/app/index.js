@@ -2,39 +2,15 @@
 const Generator = require("yeoman-generator");
 const fs = require("fs");
 const path = require("path");
+const prompts = require("./utils/prompts");
 
 module.exports = class extends Generator {
   async prompting() {
-    this.answers = await this.prompt([
-      {
-        type: "string",
-        name: "appName",
-        message: "What is the application name?",
-        default: "myapp"
-      },
-      {
-        type: "string",
-        name: "groupID",
-        message: "What is the groupID of the project?",
-        default: "es.example"
-      },
-      {
-        type: "string",
-        name: "globalSnapShot",
-        message: "What is the version of the project?",
-        default: "0.0.1-SNAPSHOT"
-      },
-      {
-        type: "input",
-        name: "definitionFile",
-        message: "Enter the path to the entity definition file:",
-        default: "./entities.json"
-      }
-    ]);
+    this.answers = await this.prompt(prompts);
   }
 
   writing() {
-    const { appName, groupID, globalSnapShot, definitionFile } = this.answers;
+    const { appName, groupID, globalSnapShot, definitionFile, databaseEngine} = this.answers;
 
     const definitionFilePath = path.resolve(definitionFile);
     const definitionContent = fs.readFileSync(definitionFilePath, "utf-8");
@@ -81,7 +57,8 @@ module.exports = class extends Generator {
       {
         appName,
         groupID,
-        globalSnapShot
+        globalSnapShot,
+        databaseEngine
       }
     );
     //Shared kernel pom
@@ -130,7 +107,9 @@ module.exports = class extends Generator {
       this.destinationPath(
         `${appName}/infrastructure/src/main/resources/application.properties`
       ),
-      {}
+      {
+        databaseEngine
+      }
     );
 
     entities.forEach(entity => {

@@ -32,7 +32,8 @@ public class <%= model %>UseCaseImpl implements <%= model %>UseCase {
         return <%= entityVarName%>Repository.deleteById(id);
     }
 
-    public <%= model %> update<%= model %>(Long id, <%= model %> update<%= entityVarName%>){
-        return <%= entityVarName%>Repository.update(update<%= entityVarName%>);
+    public <%= model %> update<%= model %>(Long id, <%= model %> update<%= entityVarName%>) {
+        update<%= entityVarName %>.setId(id);
+        return <%= entityVarName %>Repository.update(update<%= entityVarName %>);
     }
 }
