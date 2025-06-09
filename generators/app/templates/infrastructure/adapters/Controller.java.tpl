@@ -25,14 +25,14 @@ public class <%=entityName%>Controller {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<<%=entityName%>> update<%=entityName%>(@PathVariable Long id, @RequestBody <%=entityName%> update<%=entityName%>) {
+    public ResponseEntity<<%=entityName%>> update<%=entityName%>(@PathVariable String id, @RequestBody <%=entityName%> update<%=entityName%>) {
         return Optional.ofNullable(<%=entityVarName%>UseCase.update<%=entityName%>(id, update<%=entityName%>))
                 .map(<%=entityVarName%> -> new ResponseEntity<>(<%=entityVarName%>, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete<%=entityName%>(@PathVariable Long id) {
+    public ResponseEntity<Void> delete<%=entityName%>(@PathVariable String id) {
         if (!<%=entityVarName%>UseCase.delete<%=entityName%>(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -45,7 +45,7 @@ public class <%=entityName%>Controller {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<<%=entityName%>> get<%=entityName%>ById(@PathVariable Long id) {
+    public ResponseEntity<<%=entityName%>> get<%=entityName%>ById(@PathVariable String id) {
         return Optional.ofNullable(<%=entityVarName%>UseCase.get<%=entityName%>(id))
                 .map(<%=entityVarName%> -> new ResponseEntity<>(<%=entityVarName%>, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

@@ -169,14 +169,15 @@ module.exports = class extends Generator {
         {
           model: entityName,
           groupID: `${groupID}.${entityFolderName}.models`,
-          fields
+          fields,
+          relations
         }
       );
 
       this.fs.copyTpl(
-        this.templatePath("domain/Repository.java.tpl"),
+        this.templatePath("domain/RepositoryPort.java.tpl"),
         this.destinationPath(
-          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}/ports/driven/${entityName}Repository.java`
+          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}/ports/driven/${entityName}RepositoryPort.java`
         ),
         {
           model: entityName,
@@ -212,7 +213,8 @@ module.exports = class extends Generator {
           fields,
           relations,
           relationImports,
-          needsListImport
+          needsListImport,
+          databaseEngine
         }
       );
 
@@ -226,19 +228,21 @@ module.exports = class extends Generator {
           entityName,
           entityVarName,
           pathModel: `${groupID}.${entityFolderName}.models`,
-          pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`
+          pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
+          databaseEngine
         }
       );
 
       this.fs.copyTpl(
-        this.templatePath("infrastructure/adapters/Repository.java.tpl"),
+        this.templatePath("infrastructure/adapters/SpringRepository.java.tpl"),
         this.destinationPath(
-          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/repositories/${entityName}JpaRepository.java`
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/repositories/${entityName}SpringRepository.java`
         ),
         {
           groupID: `${groupID}.${entityFolderName}.adapters.persistence.repositories`,
           entityName,
-          pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`
+          pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
+          databaseEngine
         }
       );
 
@@ -253,24 +257,10 @@ module.exports = class extends Generator {
           entityVarName,
           pathModel: `${groupID}.${entityFolderName}.models`,
           pathRepo: `${groupID}.${entityFolderName}.ports.driven`,
-          pathMapper: `${groupID}.${entityFolderName}.adapters.persistence.mappers`
+          pathMapper: `${groupID}.${entityFolderName}.adapters.persistence.mappers`,
+          databaseEngine
         }
       );
-      /*
-      this.fs.copyTpl(
-        this.templatePath("infrastructure/Config.java.tpl"),
-        this.destinationPath(
-          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/config/${entityName}Config.java`
-        ),
-        {
-          entityName,
-          entityVarName,
-          groupID: `${groupID}.${entityFolderName}.config`,
-          useCaseImplPath: `${groupID}.${entityFolderName}.usecases`,
-          useCasePath: `${groupID}.${entityFolderName}.ports.driving`,
-          entityRepoPath: `${groupID}.${entityFolderName}.ports.driven`
-        }
-      );*/
     });
 
     enums.forEach(enumDef => {

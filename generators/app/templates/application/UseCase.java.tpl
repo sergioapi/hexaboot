@@ -7,8 +7,8 @@ import java.util.List;
 public interface <%= model %>UseCase {
     
     <%= model %> create<%= model %>(<%= model %> <%= entityVarName %>);
-    <%= model %> get<%= model %>(Long id);
+    <%= model %> get<%= model %>(String id);
     List<<%= model %>> getAll<%= model %>s();
-    boolean delete<%= model %>(Long id);
-    <%= model %> update<%= model %>(Long id, <%= model %> update<%= model %>);
+    boolean delete<%= model %>(String id);
+    <%= model %> update<%= model %>(String id, <%= model %> update<%= model %>);
 }

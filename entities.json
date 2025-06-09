@@ -3,7 +3,6 @@
     {
       "name": "Factura",
       "fields": [
-        { "name": "id", "type": "Long" },
         { "name": "numero", "type": "String" }
       ],
       "relations": [
@@ -18,7 +17,6 @@
     {
       "name": "LineaFactura",
       "fields": [
-        { "name": "id", "type": "Long" },
         { "name": "descripcion", "type": "String" },
         { "name": "cantidad", "type": "int" }
       ],

@@ -9,7 +9,7 @@ module.exports = [
     type: "list",
     name: "databaseEngine",
     message: "Choose the database engine",
-    choices: ["mysql", "postgresql", "oracle"],
+    choices: ["mysql", "postgresql", "oracle", "mongodb"],
     default: "mysql"
   },
   {

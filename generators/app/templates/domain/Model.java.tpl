@@ -7,9 +7,14 @@ import lombok.*;
 @Data
 public class <%=model%> {
 
+    private String id;
     <% fields.forEach(field => { -%>
         private <%= field.type %> <%= field.name %>;
     <% }) -%>
-
+    <% relations.forEach(rel => { %>
+        <% if (rel.type === "ManyToOne") { %>
+            private String <%= rel.fieldName %>; // Referencia al id de la entidad padre
+        <% } %>
+    <% }); %>
 
 }
