@@ -1,4 +1,4 @@
-package <%= groupID %>;
+package <%= package %>;
 
 public enum <%= enumName %> {
 <% values.forEach((value, index) => { %>

@@ -87,7 +87,7 @@ module.exports = class extends Generator {
         `${appName}/shared-kernel/application-inbound/${baseDirectoryDest}/annotations/UseCase.java`
       ),
       {
-        groupID: `${groupID}.annotations`
+        package: `${groupID}.annotations`
       }
     );
 
@@ -97,7 +97,8 @@ module.exports = class extends Generator {
         `${appName}/infrastructure/${baseDirectoryDest}/${appName}App.java`
       ),
       {
-        groupID: `${groupID}`,
+        package: `${groupID}`,
+        groupID, 
         mainClassName: `${appName}App`,
         pathUseCaseAnnotation: `${groupID}.annotations`
       }
@@ -113,10 +114,10 @@ module.exports = class extends Generator {
     );
 
     entities.forEach(entity => {
-      const entityName = entity.name;
-      const entityVarName =
-        entityName.charAt(0).toLowerCase() + entityName.slice(1);
-      const entityFolderName = entityName.toLowerCase() + "s";
+      const model = entity.name;
+      const modelVarName =
+        model.charAt(0).toLowerCase() + model.slice(1);
+      const entityFolderName = model.toLowerCase() + "s";
       const fields = entity.fields;
       const relations = entity.relations || [];
 
@@ -134,12 +135,12 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath("application/UseCase.java.tpl"),
         this.destinationPath(
-          `${appName}/application/${baseDirectoryDest}/${entityFolderName}/ports/driving/${entityName}UseCase.java`
+          `${appName}/application/${baseDirectoryDest}/${entityFolderName}/ports/driving/${entity.name}UseCase.java`
         ),
         {
-          model: entityName,
-          entityVarName,
-          groupID: `${groupID}.${entityFolderName}.ports.driving`,
+          model,
+          modelVarName,
+          package: `${groupID}.${entityFolderName}.ports.driving`,
           pathModel: `${groupID}.${entityFolderName}.models`
         }
       );
@@ -147,12 +148,12 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath("application/UseCaseImpl.java.tpl"),
         this.destinationPath(
-          `${appName}/application/${baseDirectoryDest}/${entityFolderName}/usecases/${entityName}UseCaseImpl.java`
+          `${appName}/application/${baseDirectoryDest}/${entityFolderName}/usecases/${entity.name}UseCaseImpl.java`
         ),
         {
-          model: entityName,
-          entityVarName,
-          groupID: `${groupID}.${entityFolderName}.usecases`,
+          model,
+          modelVarName,
+          package: `${groupID}.${entityFolderName}.usecases`,
           pathModel: `${groupID}.${entityFolderName}.models`,
           pathUseCase: `${groupID}.${entityFolderName}.ports.driving`,
           pathRepository: `${groupID}.${entityFolderName}.ports.driven`,
@@ -164,25 +165,26 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath("domain/Model.java.tpl"),
         this.destinationPath(
-          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}/models/${entityName}.java`
+          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}/models/${entity.name}.java`
         ),
         {
-          model: entityName,
-          groupID: `${groupID}.${entityFolderName}.models`,
+          model,
+          package: `${groupID}.${entityFolderName}.models`,
           fields,
-          relations
+          relations,
+          needsListImport
         }
       );
 
       this.fs.copyTpl(
         this.templatePath("domain/RepositoryPort.java.tpl"),
         this.destinationPath(
-          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}/ports/driven/${entityName}RepositoryPort.java`
+          `${appName}/domain/${baseDirectoryDest}/${entityFolderName}/ports/driven/${entity.name}RepositoryPort.java`
         ),
         {
-          model: entityName,
-          entityVarName,
-          groupID: `${groupID}.${entityFolderName}.ports.driven`,
+          model,
+          modelVarName,
+          package: `${groupID}.${entityFolderName}.ports.driven`,
           pathModel: `${groupID}.${entityFolderName}.models`
         }
       );
@@ -191,12 +193,12 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath("infrastructure/adapters/Controller.java.tpl"),
         this.destinationPath(
-          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/rest/${entityName}Controller.java`
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/rest/${entity.name}Controller.java`
         ),
         {
-          groupID: `${groupID}.${entityFolderName}.adapters.rest`,
-          entityName,
-          entityVarName,
+          package: `${groupID}.${entityFolderName}.adapters.rest`,
+          model,
+          modelVarName,
           pathModel: `${groupID}.${entityFolderName}.models`,
           pathUseCase: `${groupID}.${entityFolderName}.ports.driving`
         }
@@ -205,11 +207,11 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath("infrastructure/adapters/Entity.java.tpl"),
         this.destinationPath(
-          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/entities/${entityName}Entity.java`
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/entities/${entity.name}Entity.java`
         ),
         {
-          groupID: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
-          model: entityName,
+          package: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
+          model,
           fields,
           relations,
           relationImports,
@@ -221,12 +223,12 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath("infrastructure/adapters/Mapper.java.tpl"),
         this.destinationPath(
-          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/mappers/${entityName}Mapper.java`
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/mappers/${entity.name}Mapper.java`
         ),
         {
-          groupID: `${groupID}.${entityFolderName}.adapters.persistence.mappers`,
-          entityName,
-          entityVarName,
+          package: `${groupID}.${entityFolderName}.adapters.persistence.mappers`,
+          model,
+          modelVarName,
           pathModel: `${groupID}.${entityFolderName}.models`,
           pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
           databaseEngine
@@ -234,13 +236,13 @@ module.exports = class extends Generator {
       );
 
       this.fs.copyTpl(
-        this.templatePath("infrastructure/adapters/SpringRepository.java.tpl"),
+        this.templatePath("infrastructure/adapters/DataRepository.java.tpl"),
         this.destinationPath(
-          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/repositories/${entityName}SpringRepository.java`
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/repositories/${entity.name}DataRepository.java`
         ),
         {
-          groupID: `${groupID}.${entityFolderName}.adapters.persistence.repositories`,
-          entityName,
+          package: `${groupID}.${entityFolderName}.adapters.persistence.repositories`,
+          model,
           pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
           databaseEngine
         }
@@ -249,12 +251,12 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath("infrastructure/adapters/RepositoryAdapter.java.tpl"),
         this.destinationPath(
-          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/repositories/${entityName}RepositoryAdapter.java`
+          `${appName}/infrastructure/${baseDirectoryDest}/${entityFolderName}/adapters/persistence/repositories/${entity.name}RepositoryAdapter.java`
         ),
         {
-          groupID: `${groupID}.${entityFolderName}.adapters.persistence.repositories`,
-          entityName,
-          entityVarName,
+          package: `${groupID}.${entityFolderName}.adapters.persistence.repositories`,
+          model,
+          modelVarName,
           pathModel: `${groupID}.${entityFolderName}.models`,
           pathRepo: `${groupID}.${entityFolderName}.ports.driven`,
           pathMapper: `${groupID}.${entityFolderName}.adapters.persistence.mappers`,
@@ -275,7 +277,7 @@ module.exports = class extends Generator {
         {
           enumName,
           values,
-          groupID: `${groupID}.enums`
+          package: `${groupID}.enums`
         }
       );
     });

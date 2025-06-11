@@ -1,4 +1,4 @@
-package <%= groupID %>;
+package <%= package %>;
 
 import java.lang.annotation.*;
 

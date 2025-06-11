@@ -1,0 +1,27 @@
+{
+  "entities": [
+    {
+      "name": "Persona",
+      "fields": [
+        { "name": "nombre", "type": "String" },
+        { "name": "edad", "type": "int" }
+      ],
+      "relations": [
+        {
+          "type": "OneToOne",
+          "targetEntity": "Pasaporte",
+          "fieldName": "pasaporte"
+        }
+      ]
+    },
+    {
+      "name": "Pasaporte",
+      "fields": [
+        { "name": "numero", "type": "String" },
+        { "name": "pais", "type": "String" }
+      ]
+    }
+  ]
+}
+
+
