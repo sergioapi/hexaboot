@@ -1,8 +1,7 @@
 "use strict";
 const Generator = require("yeoman-generator");
-const fs = require("fs");
-const path = require("path");
 const prompts = require("./utils/prompts");
+const { parseEntities } = require("./utils/entityParser");
 
 module.exports = class extends Generator {
   async prompting() {
@@ -11,10 +10,7 @@ module.exports = class extends Generator {
 
   writing() {
     const { appName, groupID, globalSnapShot, definitionFile, databaseEngine} = this.answers;
-
-    const definitionFilePath = path.resolve(definitionFile);
-    const definitionContent = fs.readFileSync(definitionFilePath, "utf-8");
-    const { entities = [], enums = [] } = JSON.parse(definitionContent);
+    const { entities, enums } = parseEntities(definitionFile);
 
     // Convertimos "es.hexagonal" en "es/hexagonal"
     const packagePath = groupID.replace(/\./g, "/");
@@ -231,7 +227,9 @@ module.exports = class extends Generator {
           modelVarName,
           pathModel: `${groupID}.${entityFolderName}.models`,
           pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
-          databaseEngine
+          databaseEngine,
+          relations,
+          relationImports
         }
       );
 

@@ -3,13 +3,14 @@
     {
       "name": "Factura",
       "fields": [
-        { "name": "numero", "type": "String" }
+        { "name": "total", "type": "Double" },
+        { "name": "fecha", "type": "String" }
       ],
       "relations": [
         {
           "type": "OneToMany",
           "targetEntity": "LineaFactura",
-          "fieldName": "lineas",
+          "fieldName": "lineasFacturas",
           "mappedBy": "factura"
         }
       ]
@@ -17,8 +18,7 @@
     {
       "name": "LineaFactura",
       "fields": [
-        { "name": "descripcion", "type": "String" },
-        { "name": "cantidad", "type": "int" }
+        { "name": "total", "type": "Double" }
       ],
       "relations": [
         {

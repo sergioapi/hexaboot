@@ -16,12 +16,10 @@ public class <%=model%> {
     private <%= field.type %> <%= field.name %>;
     <%} %>
     <% for (rel of relations) {%>
-    <% if (rel.type === "ManyToOne") { %>
-    private String <%= rel.fieldName %>; 
-    <% } else if (rel.type === "OneToOne") { %>
-    private String <%= rel.fieldName %>; 
+    <% if (rel.type === "ManyToOne" || rel.type === "OneToOne") { %>
+    private String <%= rel.fieldName %>Id; 
     <% } else if (rel.type === "ManyToMany") { %>
-    private List<String> <%= rel.fieldName %>;
+    private List<String> <%= rel.fieldName %>Ids;
     <% } %>
     <%} %>
 }
