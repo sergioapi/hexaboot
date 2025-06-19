@@ -1,19 +1,19 @@
-# generator-hexagonal-test
-> Prueba de generador para proyectos en arquitectura hexagonal
+# generator-hexaboot
+> Hexagonal architecture project generator
 
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) and generator-hexagonal-test using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+First, install [Yeoman](http://yeoman.io) and generator-hexaboot using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
 ```bash
 npm install -g yo
-npm install -g generator-hexagonal-test
+npm install -g generator-hexaboot
 ```
 
 Then generate your new project:
 
 ```bash
-yo hexagonal-test
+yo hexaboot
 ```
 
 ## Getting To Know Yeoman
@@ -28,9 +28,9 @@ yo hexagonal-test
  © [Sergio Alvarez](https://github.com/sergioapi)
 
 
-[npm-image]: https://badge.fury.io/js/generator-hexagonal-test.svg
-[npm-url]: https://npmjs.org/package/generator-hexagonal-test
-[travis-image]: https://travis-ci.com/sergioapi/generator-hexagonal-test.svg?branch=master
-[travis-url]: https://travis-ci.com/sergioapi/generator-hexagonal-test
-[daviddm-image]: https://david-dm.org/sergioapi/generator-hexagonal-test.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/sergioapi/generator-hexagonal-test
+[npm-image]: https://badge.fury.io/js/generator-hexaboot.svg
+[npm-url]: https://npmjs.org/package/generator-hexaboot
+[travis-image]: https://travis-ci.com/sergioapi/generator-hexaboot.svg?branch=master
+[travis-url]: https://travis-ci.com/sergioapi/generator-hexaboot
+[daviddm-image]: https://david-dm.org/sergioapi/generator-hexaboot.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/sergioapi/generator-hexaboot

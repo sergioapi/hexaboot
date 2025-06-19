@@ -1,4 +1,4 @@
-# HEXAGONAL ARCHETYPE GENERATOR 'hexagonal-test' by SERGIO
+# HEXAGONAL ARCHETYPE GENERATOR 'hexaboot' by SERGIO
 ## Manual de usuario
 
 > HEXAGONAL ARCHITECTURE PROJECT GENERATOR
@@ -20,8 +20,8 @@ npm install -g yo
 Download the repository:
 
 ```bash
-git clone https://github.com/sergioapi/generator-hexagonal-test
-cd generator-hexagonal-test
+git clone https://github.com/sergioapi/hexaboot
+cd hexaboot
 npm i
 npm link
 ```
@@ -31,7 +31,7 @@ Then generate your new project.
 ## Generating a new project
 
 ```bash
-yo hexagonal-test
+yo hexaboot
 ```
 - If you want to generate a project, these are the different options and configurations you must to enter.
 

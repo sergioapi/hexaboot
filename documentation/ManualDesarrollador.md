@@ -1,4 +1,4 @@
-# HEXAGONAL ARCHETYPE GENERATOR 'hexagonal-test' by SERGIO
+# HEXAGONAL ARCHETYPE GENERATOR 'hexaboot' by SERGIO
 ## Manual de desarrollador
 
 ## Requisitos previos
