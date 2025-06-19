@@ -13,7 +13,11 @@
   ],
   "main": "generators/index.js",
   "keywords": [
-    "",
+    "Java",
+    "Spring-boot",
+    "Javascript",
+    "Ports-and-adapters",
+    "Hexagonal-architecture",
     "yeoman-generator"
   ],
   "devDependencies": {
@@ -74,6 +78,6 @@
     "pretest": "eslint .",
     "test": "jest"
   },
-  "repository": "sergioapi/hexaboot",
-  "license": "GPL-3.0"
+  "repository": "https://github.com/sergioapi/hexaboot",
+  "license": "MIT"
 }
