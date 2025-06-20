@@ -39,24 +39,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <% if (databaseEngine !== 'mongodb') { %>
+        <% if (dataBaseEngine !== 'MongoDB') { %>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
             </dependency>
-            <% if (databaseEngine === 'mysql') { %>
+            <% if (dataBaseEngine === 'MySql') { %>
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
                 <scope>runtime</scope>
             </dependency>
-            <% } else if (databaseEngine === 'postgresql') { %>
+            <% } else if (dataBaseEngine === 'Postgres') { %>
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <scope>runtime</scope>
             </dependency>
-            <% } else if (databaseEngine === 'oracle') { %>
+            <% } else if (dataBaseEngine === 'Oracle') { %>
             <dependency>
                 <groupId>com.oracle.database.jdbc</groupId>
                 <artifactId>ojdbc8</artifactId>

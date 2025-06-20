@@ -7,10 +7,10 @@ module.exports = [
   },
   {
     type: "list",
-    name: "databaseEngine",
+    name: "dataBaseEngine",
     message: "Choose the database engine",
-    choices: ["mysql", "postgresql", "oracle", "mongodb"],
-    default: "mysql"
+    choices: ["MySql", "Postgres", "Oracle", "MongoDB"],
+    default: "MySql"
   },
   {
     type: "string",
@@ -25,9 +25,15 @@ module.exports = [
     default: "0.0.1-SNAPSHOT"
   },
   {
+    type: "confirm",
+    name: "useDefinitionFile",
+    message: "Do you want to include a data model definition file?",
+    default: false
+  },
+  {
     type: "input",
     name: "definitionFile",
     message: "Enter the path to the entity definition file:",
-    default: "./entities.json"
+    when: answers => answers.useDefinitionFile
   }
 ];

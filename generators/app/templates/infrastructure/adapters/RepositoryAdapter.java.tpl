@@ -6,7 +6,7 @@ import <%= pathRepo %>.<%= model %>RepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-<% if (databaseEngine === 'mongodb') 
+<% if (dataBaseEngine === 'MongoDB') 
 { %>import org.bson.types.ObjectId;
 <% } %>
 
@@ -25,7 +25,7 @@ public class <%= model %>RepositoryAdapter implements <%= model %>RepositoryPort
 
     @Override
     public <%= model %> findById(String strId) {
-        <% if (databaseEngine === 'mongodb') { %> ObjectId id = new ObjectId(strId); <% } else { %> Long id = Long.valueOf(strId); <% } %>
+        <% if (dataBaseEngine === 'MongoDB') { %> ObjectId id = new ObjectId(strId); <% } else { %> Long id = Long.valueOf(strId); <% } %>
         return <%= modelVarName %>Mapper.toDomain(<%= modelVarName %>Repository.findById(id).orElse(null));
     }
 
@@ -36,7 +36,7 @@ public class <%= model %>RepositoryAdapter implements <%= model %>RepositoryPort
 
     @Override
     public Boolean deleteById(String strId) {
-        <% if (databaseEngine === 'mongodb') { %> ObjectId id = new ObjectId(strId); <% } else { %> Long id = Long.valueOf(strId); <% } %>
+        <% if (dataBaseEngine === 'MongoDB') { %> ObjectId id = new ObjectId(strId); <% } else { %> Long id = Long.valueOf(strId); <% } %>
         <%= model %> <%= modelVarName %> = <%= modelVarName %>Mapper.toDomain(<%= modelVarName %>Repository.findById(id).orElse(null));
         if(<%= modelVarName %>!=null)
             <%= modelVarName %>Repository.delete(<%= modelVarName %>Mapper.toEntity(<%= modelVarName %>));
@@ -47,7 +47,7 @@ public class <%= model %>RepositoryAdapter implements <%= model %>RepositoryPort
     public <%= model %> update(<%= model %> <%= modelVarName %>) {
         if(<%= modelVarName %>.getId() == null)
             return null;
-        <% if (databaseEngine === 'mongodb') { %> ObjectId id = new ObjectId(<%= modelVarName %>.getId()); <% } else { %> Long id = Long.valueOf(<%= modelVarName %>.getId()); <% } %>
+        <% if (dataBaseEngine === 'MongoDB') { %> ObjectId id = new ObjectId(<%= modelVarName %>.getId()); <% } else { %> Long id = Long.valueOf(<%= modelVarName %>.getId()); <% } %>
         <%= model %> existing<%= model %> = <%= modelVarName %>Mapper.toDomain(<%= modelVarName %>Repository.findById(id).orElse(null));
         if(existing<%= model %> != null)
             return <%= modelVarName %>Mapper.toDomain(<%= modelVarName %>Repository.save(<%= modelVarName %>Mapper.toEntity(<%= modelVarName %>)));
