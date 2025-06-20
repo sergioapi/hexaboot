@@ -13,8 +13,10 @@ Node v20.14.0
 
 First, install [Yeoman](http://yeoman.io) (we assume you have pre-installed [node.js](https://nodejs.org/)):
 
+Due to a known bug in Yeoman CLI version 5.x, we highly recommend installing Yeoman CLI version 4.3.1 to avoid issues with file overwriting when generating projects.
+
 ```bash
-npm install -g yo
+npm install -g yo@4.3.1
 ```
 
 Download the repository:
