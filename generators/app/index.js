@@ -17,15 +17,16 @@ module.exports = class extends Generator {
     );
 
     this.answers = await this.prompt(prompts);
-
     let appName = this.answers.appName.replace(/\s/g, "");
     this.answers.appName = appName.charAt(0).toUpperCase() + appName.slice(1);
-
     this.answers.groupID = this.answers.groupID.replace(/\s/g, "");
     this.answers.globalSnapShot = this.answers.globalSnapShot.replace(
       /\s/g,
       ""
     );
+    this.answers.DBtype = this.answers.dataBaseEngine.includes("Mongo")
+      ? "NoSql"
+      : "Sql";
   }
 
   writing() {
@@ -37,9 +38,10 @@ module.exports = class extends Generator {
   }
 
   install() {
-    this.installDependencies({
+    /* This.installDependencies({
       bower: false
     });
+    */
   }
 
   end() {

@@ -6,7 +6,14 @@ const chalk = require("chalk");
  */
 function writeProjectBase(
   generator,
-  { appName, groupID, globalSnapShot, dataBaseEngine, baseDirectoryDest }
+  {
+    appName,
+    groupID,
+    globalSnapShot,
+    dataBaseEngine,
+    DBtype,
+    baseDirectoryDest
+  }
 ) {
   // Poms
   generator.fs.copyTpl(
@@ -30,7 +37,7 @@ function writeProjectBase(
   generator.fs.copyTpl(
     generator.templatePath("infrastructure/pom.xml.tpl"),
     generator.destinationPath(`${appName}/infrastructure/pom.xml`),
-    { appName, groupID, globalSnapShot, dataBaseEngine }
+    { appName, groupID, globalSnapShot, dataBaseEngine, DBtype }
   );
 
   generator.fs.copyTpl(
@@ -75,7 +82,7 @@ function writeProjectBase(
     generator.destinationPath(
       `${appName}/infrastructure/src/main/resources/application.properties`
     ),
-    { dataBaseEngine }
+    { dataBaseEngine, DBtype }
   );
 }
 
@@ -84,7 +91,15 @@ function writeProjectBase(
  */
 function writeDataModel(
   generator,
-  { entities, enums, appName, groupID, dataBaseEngine, baseDirectoryDest }
+  {
+    entities,
+    enums,
+    appName,
+    groupID,
+    dataBaseEngine,
+    DBtype,
+    baseDirectoryDest
+  }
 ) {
   entities.forEach(entity => {
     const model = entity.name;
@@ -188,7 +203,8 @@ function writeDataModel(
         relations,
         relationImports,
         needsListImport,
-        dataBaseEngine
+        dataBaseEngine,
+        DBtype
       }
     );
 
@@ -204,6 +220,7 @@ function writeDataModel(
         pathModel: `${groupID}.${entityFolderName}.models`,
         pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
         dataBaseEngine,
+        DBtype,
         relations,
         relationImports
       }
@@ -218,7 +235,8 @@ function writeDataModel(
         package: `${groupID}.${entityFolderName}.adapters.persistence.repositories`,
         model,
         pathEntity: `${groupID}.${entityFolderName}.adapters.persistence.entities`,
-        dataBaseEngine
+        dataBaseEngine,
+        DBtype
       }
     );
 
@@ -236,7 +254,8 @@ function writeDataModel(
         pathModel: `${groupID}.${entityFolderName}.models`,
         pathRepo: `${groupID}.${entityFolderName}.ports.driven`,
         pathMapper: `${groupID}.${entityFolderName}.adapters.persistence.mappers`,
-        dataBaseEngine
+        dataBaseEngine,
+        DBtype
       }
     );
   });
@@ -267,6 +286,7 @@ function writeHexagonal(generator) {
   const {
     appName,
     dataBaseEngine,
+    DBtype,
     groupID,
     globalSnapShot,
     definitionFile
@@ -280,6 +300,7 @@ function writeHexagonal(generator) {
     groupID,
     globalSnapShot,
     dataBaseEngine,
+    DBtype,
     baseDirectoryDest
   });
 
@@ -299,6 +320,7 @@ function writeHexagonal(generator) {
       appName,
       groupID,
       dataBaseEngine,
+      DBtype,
       baseDirectoryDest
     });
   }

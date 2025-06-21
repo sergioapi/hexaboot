@@ -19,12 +19,12 @@ import <%= importStatement %>;
 @Table(name = "<%=model.toLowerCase()%>")<% } %>
 public class <%=model%>Entity {
 
-    @Id<% if (dataBaseEngine !== 'MongoDB') { %>
+    @Id<% if (DBtype==='Sql') { %>
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;<% } else { %> private ObjectId id;<% } %>
 <% for (field of fields) { %>
     private <%= field.type %> <%= field.name %>;<% } %>
-<% if (dataBaseEngine !== 'MongoDB') { %>
+<% if (DBtype==='Sql') { %>
 <% for (rel of relations) { 
     if (rel.type === "OneToMany") { %>
     

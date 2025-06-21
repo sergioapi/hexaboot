@@ -2,7 +2,7 @@ package <%= package %>;
 
 import <%= pathEntity %>.<%= model %>Entity;
 import org.springframework.stereotype.Repository;
-<% if (dataBaseEngine !== 'MongoDB') { %> 
+<% if (DBtype==='Sql') { %> 
 import org.springframework.data.jpa.repository.JpaRepository;
 <% } else { %> 
 import org.springframework.data.mongodb.repository.MongoRepository;

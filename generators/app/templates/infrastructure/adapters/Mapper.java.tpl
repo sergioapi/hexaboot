@@ -4,7 +4,7 @@ import <%= pathEntity %>.<%= model %>Entity;
 import <%= pathModel %>.<%= model %>;
 import org.mapstruct.Mapper;
 import java.util.List;
-<% if (dataBaseEngine !== 'MongoDB') { %>
+<% if (DBtype==='Sql') { %>
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import java.util.stream.Collectors;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @Mapper(componentModel = "spring")
 public interface <%= model %>Mapper {
 
-<% if (dataBaseEngine !== 'MongoDB') { %>
+<% if (DBtype==='Sql') { %>
 <% relations.forEach(function(rel) { if (rel.type === 'ManyToOne' || rel.type === 'OneToOne') { %>
     @Mapping(target = "<%= rel.fieldName %>", source = "<%= rel.fieldName %>Id", qualifiedByName = "idTo<%= rel.targetEntity %>Entity")
 <% } else if (rel.type === 'OneToMany') { %>
@@ -30,7 +30,7 @@ public interface <%= model %>Mapper {
 <% } %>
     <%= model %>Entity toEntity(<%= model %> <%= modelVarName %>);
 
-<% if (dataBaseEngine !== 'MongoDB') { %>
+<% if (DBtype==='Sql') { %>
 <% relations.forEach(function(rel) { if (rel.type === 'ManyToOne' || rel.type === 'OneToOne') { %>
     @Mapping(target = "<%= rel.fieldName %>Id", source = "<%= rel.fieldName %>.id")
 <% } else if (rel.type === 'OneToMany') { %>
