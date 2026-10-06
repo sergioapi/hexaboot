@@ -2,7 +2,7 @@
 
 Hexaboot is a CLI generator for Java and Spring Boot backend projects following Hexagonal Architecture.
 
-Built with Node.js and Yeoman, it scaffolds a multi-module Maven project from a few configuration options and an optional JSON entity definition. It is designed to reduce repetitive project setup by generating the base architecture, CRUD components and persistence configuration for PostgreSQL, MySQL, Oracle or MongoDB.
+Built with Node.js and Yeoman, it scaffolds a multi-module Maven project from a few configuration options and an optional JSON entity definition. It reduces repetitive project setup by generating the base architecture, CRUD components and persistence configuration for PostgreSQL, MySQL, Oracle or MongoDB.
 
 ## What it generates
 
