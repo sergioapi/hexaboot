@@ -1,36 +1,102 @@
-# generator-hexaboot
-> Hexagonal architecture project generator
+# Hexaboot
 
-## Installation
+Hexaboot is a CLI generator for Java and Spring Boot backend projects following Hexagonal Architecture.
 
-First, install [Yeoman](http://yeoman.io) and generator-hexaboot using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+Built with Node.js and Yeoman, it scaffolds a multi-module Maven project from a few configuration options and an optional JSON entity definition. It is designed to reduce repetitive project setup by generating the base architecture, CRUD components and persistence configuration for PostgreSQL, MySQL, Oracle or MongoDB.
+
+## What it generates
+
+- Java 17 + Spring Boot backend project.
+- Multi-module Maven structure following Hexagonal Architecture.
+- Controllers, services, use cases, repositories, domain models and persistence entities.
+- Base CRUD operations from an entity definition.
+- Entity relationships defined in JSON.
+- Database-specific dependencies and persistence configuration.
+- Generated mappings and boilerplate using MapStruct and Lombok.
+
+The generator itself uses JavaScript, Node.js, Yeoman and `.tpl` templates to produce the Java source code.
+
+## Usage
+
+### Requirements
+
+- Node.js 20.14.0
+- Java 17
+- npm
+- Yeoman CLI 4.3.1
+
+> Yeoman CLI 4.3.1 is recommended because of file-overwrite issues with Yeoman CLI 5.x.
+
+Install Yeoman:
 
 ```bash
-npm install -g yo
-npm install -g generator-hexaboot
+npm install -g yo@4.3.1
 ```
 
-Then generate your new project:
+Clone and install Hexaboot:
+
+```bash
+git clone https://github.com/sergioapi/hexaboot.git
+cd hexaboot
+npm install
+npm link
+```
+
+Run the generator:
 
 ```bash
 yo hexaboot
 ```
 
-## Getting To Know Yeoman
+Hexaboot will guide you through the configuration:
 
- * Yeoman has a heart of gold.
- * Yeoman is a person with feelings and opinions, but is very easy to work with.
- * Yeoman can be too opinionated at times but is easily convinced not to be.
- * Feel free to [learn more about Yeoman](http://yeoman.io/).
+```text
+? What is the application name?
+? Choose the database engine (MySql, Postgres, Oracle or MongoDB)
+? What is the groupID of the project?
+? What is the version of the project?
+? Do you want to include a data model definition file?
+? Enter the path to the entity definition file:
+```
 
-## License
+## Entity definition
 
- © [Sergio Alvarez](https://github.com/sergioapi)
+An optional JSON file can define the entities, fields and relationships used to generate the base application code.
 
+```json
+{
+  "entities": [
+    {
+      "name": "Student",
+      "fields": [
+        { "name": "name", "type": "String" }
+      ],
+      "relations": [
+        {
+          "type": "ManyToMany",
+          "targetEntity": "Course",
+          "fieldName": "courses"
+        }
+      ]
+    }
+  ]
+}
+```
 
-[npm-image]: https://badge.fury.io/js/generator-hexaboot.svg
-[npm-url]: https://npmjs.org/package/generator-hexaboot
-[travis-image]: https://travis-ci.com/sergioapi/generator-hexaboot.svg?branch=master
-[travis-url]: https://travis-ci.com/sergioapi/generator-hexaboot
-[daviddm-image]: https://david-dm.org/sergioapi/generator-hexaboot.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/sergioapi/generator-hexaboot
+The definition is parsed by the generator and used by the `.tpl` templates to create the corresponding components in the generated project.
+
+## Generated structure
+
+```text
+generated-project/
+├── application/
+├── domain/
+├── infrastructure/
+└── shared-kernel/
+```
+
+The generated modules separate application logic, domain code and infrastructure concerns. The `shared-kernel` module contains shared elements such as the custom `@UseCase` annotation, allowing use cases to be identified without introducing Spring-specific logic into the application layer.
+
+## Documentation
+
+More detailed usage and implementation documentation is available in the [`documentation`](./documentation) directory.
